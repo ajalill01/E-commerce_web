@@ -6,7 +6,6 @@ const btnText = document.getElementById("btnText");
 const spinner = document.getElementById("spinner");
 const passError = document.getElementById("incorret-password");
 
-// API Configuration
 const API_BASE_URL = "https://e-commerce-web-1nmc.onrender.com";
 const LOGIN_ENDPOINT = `${API_BASE_URL}/api/auth/login`;
 
@@ -52,7 +51,7 @@ async function authenticateUser(credentials) {
 function handleSuccessfulLogin(token) {
   localStorage.setItem("token", token);
   console.log("Authentication token stored successfully");
-  window.location.href = "/docs/admin-dashboard/myAdmin.html";
+  window.location.href = "admin-dashboard/myAdmin.html";
 }
 
 function showError(message) {
@@ -64,7 +63,7 @@ function toggleLoadingState(isLoading) {
   btnText.style.display = isLoading ? "none" : "inline";
   spinner.style.display = isLoading ? "block" : "none";
   
-  // Disable/enable form elements during loading
+
   usernameInput.disabled = isLoading;
   passwordInput.disabled = isLoading;
   loginBtn.disabled = isLoading;
