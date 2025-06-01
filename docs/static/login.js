@@ -51,7 +51,7 @@ async function authenticateUser(credentials) {
 function handleSuccessfulLogin(token) {
   localStorage.setItem("token", token);
   console.log("Authentication token stored successfully");
-window.location.href = "https://ajalill01.github.io/E-commerce_web/admin-dashboard/myAdmin";
+  window.location.href = "/admin-dashboard/myAdmin.html";
 }
 
 function showError(message) {
