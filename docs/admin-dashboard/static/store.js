@@ -1,321 +1,282 @@
+// API Configuration
+const API_BASE_URL = "https://e-commerce-web-1nmc.onrender.com";
+const API_ENDPOINTS = {
+  BRANDS: `${API_BASE_URL}/api/brands`,
+  CARS: `${API_BASE_URL}/api/cars`,
+  PRODUCTS: `${API_BASE_URL}/api/products`
+};
 
-
+// Image Preview Functionality
 function setupImagePreview(inputId, previewId) {
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  const newInput = input.cloneNode(true);
+  
+  input.parentNode.replaceChild(newInput, input);
+  preview.innerHTML = '';
 
-    const newInput = input.cloneNode(true);
-    input.parentNode.replaceChild(newInput, input);
-    
+  newInput.addEventListener('change', function() {
     preview.innerHTML = '';
-
-    newInput.addEventListener('change', function() {
-        preview.innerHTML = '';
-        if (this.files && this.files.length > 0) {
-            Array.from(this.files).forEach(file => {
-                if (!file.type.match('image.*')) {
-                    showNotification('Please select only image files', 'error');
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewItem = document.createElement('div');
-                    previewItem.className = 'image-preview-item';
-                    previewItem.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <div class="remove-image" onclick="this.parentElement.remove()">
-                            <i class='bx bx-x'></i>
-                        </div>
-                    `;
-                    preview.appendChild(previewItem);
-                };
-                reader.readAsDataURL(file);
-            });
+    if (this.files && this.files.length > 0) {
+      Array.from(this.files).forEach(file => {
+        if (!file.type.match('image.*')) {
+          showNotification('Please select only image files', 'error');
+          return;
         }
-    });
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const previewItem = document.createElement('div');
+          previewItem.className = 'image-preview-item';
+          previewItem.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <div class="remove-image" onclick="this.parentElement.remove()">
+              <i class='bx bx-x'></i>
+            </div>
+          `;
+          preview.appendChild(previewItem);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  });
 }
 
+// Notification System
 function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <i class="bx ${type === 'success' ? 'bx-check-circle' : 'bx-error-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('fade-out');
-        setTimeout(() => notification.remove(), 300);
-    }, 5000);
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.innerHTML = `
+    <i class="bx ${type === 'success' ? 'bx-check-circle' : 'bx-error-circle'}"></i>
+    <span>${message}</span>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.classList.add('fade-out');
+    setTimeout(() => notification.remove(), 300);
+  }, 5000);
 }
 
+// Theme Management
 function applySavedTheme() {
-    const savedTheme = localStorage.getItem('darkMode');
-    const themeToggler = document.querySelector(".them-toggler");
-    
-    if (savedTheme === '1') {
-        document.body.classList.add('dark-theme-variables');
-        themeToggler.querySelector('i:nth-child(1)').classList.remove('active');
-        themeToggler.querySelector('i:nth-child(2)').classList.add('active');
-    } else {
-        document.body.classList.remove('dark-theme-variables');
-        themeToggler.querySelector('i:nth-child(1)').classList.add('active');
-        themeToggler.querySelector('i:nth-child(2)').classList.remove('active');
-    }
+  const savedTheme = localStorage.getItem('darkMode');
+  const themeToggler = document.querySelector(".them-toggler");
+  
+  if (!themeToggler) return;
+  
+  if (savedTheme === '1') {
+    document.body.classList.add('dark-theme-variables');
+    themeToggler.querySelector('i:nth-child(1)').classList.remove('active');
+    themeToggler.querySelector('i:nth-child(2)').classList.add('active');
+  } else {
+    document.body.classList.remove('dark-theme-variables');
+    themeToggler.querySelector('i:nth-child(1)').classList.add('active');
+    themeToggler.querySelector('i:nth-child(2)').classList.remove('active');
+  }
 }
 
+// Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
-    applySavedTheme();
-    
-    setupImagePreview('brandLogo', 'brandLogoPreview');
-    setupImagePreview('modelImages', 'modelImagesPreview'); 
-    setupImagePreview('productImages', 'imagePreview');
-    
-    document.getElementById('menu-btn').addEventListener('click', function() {
-        document.querySelector('aside').classList.toggle('active');
-    });
+  applySavedTheme();
+  
+  // Setup image previews
+  setupImagePreview('brandLogo', 'brandLogoPreview');
+  setupImagePreview('modelImages', 'modelImagesPreview'); 
+  setupImagePreview('productImages', 'imagePreview');
+  
+  // Setup sidebar toggle
+  document.getElementById('menu-btn').addEventListener('click', function() {
+    document.querySelector('aside').classList.toggle('active');
+  });
 
-    const themeToggler = document.querySelector('.them-toggler');
+  // Setup theme toggler
+  const themeToggler = document.querySelector('.them-toggler');
+  if (themeToggler) {
     themeToggler.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme-variables');
-        themeToggler.querySelector('i:nth-child(1)').classList.toggle('active');
-        themeToggler.querySelector('i:nth-child(2)').classList.toggle('active');
-        localStorage.setItem('darkMode', document.body.classList.contains('dark-theme-variables') ? '1' : '0');
+      document.body.classList.toggle('dark-theme-variables');
+      themeToggler.querySelector('i:nth-child(1)').classList.toggle('active');
+      themeToggler.querySelector('i:nth-child(2)').classList.toggle('active');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-theme-variables') ? '1' : '0');
     });
+  }
 
-    loadBrandsForModelForm();
-    loadBrands();
+  // Load initial data
+  loadBrandsForModelForm();
+  loadBrandsForProductForm();
+  setupFormSubmissions();
 });
 
-document.getElementById('brandForm').addEventListener('submit', async function(e) {
+// Form Submission Handlers
+function setupFormSubmissions() {
+  // Brand Form
+  document.getElementById('brandForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     
-    const brandName = document.getElementById('brandName').value;
-    const brandLogo = document.getElementById('brandLogo').files[0];
+    const formData = new FormData();
+    formData.append('name', document.getElementById('brandName').value);
+    formData.append('photos', document.getElementById('brandLogo').files[0]);
+
+    await submitForm(this, `${API_ENDPOINTS.BRANDS}/add`, formData, 'Brand created successfully!');
+  });
+
+  // Model Form
+  document.getElementById('modelForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
     
-    if (!brandName || !brandLogo) {
-        showNotification('Please fill all required fields', 'error');
-        return;
-    }
-
-    try {
-        const formData = new FormData();
-        formData.append('name', brandName);
-        formData.append('photos', brandLogo);
-
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="bx bx-loader bx-spin"></i> Creating...';
-
-        const response = await fetch('http://localhost:3000/api/brands/add', {
-            method: 'POST',
-            body: formData,
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        });
-
-        if (!response.ok) {
-            let errorData;
-            try {
-                errorData = await response.json();
-            } catch (jsonError) {
-                throw new Error(`Server error: ${response.status}`);
-            }
-            throw new Error(errorData.error || errorData.message || 'Unknown error');
-        }
-
-        const data = await response.json();
-        
-        this.reset();
-        document.getElementById('brandLogoPreview').innerHTML = '';
-        showNotification('Brand created successfully!', 'success');
-        
-    } catch (err) {
-        console.error('Brand creation error:', err);
-        showNotification(`Error: ${err.message}`, 'error');
-    } finally {
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="bx bx-plus"></i> Create Brand';
-    }
-});
-
-async function loadBrands() {
-    const brandSelect = document.getElementById('productBrand');
-    const carSelect = document.getElementById('productCar');
-
-    try {
-        const response = await fetch('http://localhost:3000/api/brands/get',{
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }});
-        if (!response.ok) throw new Error('Failed to load brands');
-        
-        const brands = await response.json();
-        brandSelect.innerHTML = '<option value="">-- Select Brand --</option>';
-        brands.forEach(brand => {
-            brandSelect.innerHTML += `<option value="${brand._id}">${brand.name}</option>`;
-        });
-    } catch (err) {
-        console.error("Brand loading error:", err);
-        showNotification('Failed to load brands', 'error');
-    }
-
-    brandSelect.addEventListener('change', async (e) => {
-        const brandId = e.target.value;
-        carSelect.disabled = !brandId;
-        
-        if (brandId) {
-            try {
-                const response = await fetch(`http://localhost:3000/api/cars/get?brandId=${brandId}`, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                });
-                if (!response.ok) throw new Error('Failed to load car models');
-                
-                const cars = await response.json();
-                carSelect.innerHTML = '<option value="">-- Select Model --</option>';
-                cars.forEach(car => {
-                    carSelect.innerHTML += `<option value="${car._id}">${car.name} (${car.year})</option>`;
-                });
-            } catch (err) {
-                console.error("Car loading error:", err);
-                showNotification('Failed to load car models', 'error');
-            }
-        }
+    const formData = new FormData();
+    formData.append('brandId', document.getElementById('modelBrand').value);
+    formData.append('name', document.getElementById('modelName').value);
+    formData.append('year', document.getElementById('modelYear').value);
+    
+    Array.from(document.getElementById('modelImages').files).forEach(file => {
+      formData.append('photos', file);
     });
 
-    document.getElementById('productForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const formData = new FormData();
-        formData.append('name', document.getElementById('productName').value);
-        formData.append('carId', document.getElementById('productCar').value);
-        formData.append('description', 'Sample description');
-        formData.append('price', document.getElementById('productPrice').value);
-        
-        const files = document.getElementById('productImages').files;
-        for (let i = 0; i < files.length; i++) {
-            formData.append('photos', files[i]);
-        }
+    await submitForm(this, `${API_ENDPOINTS.CARS}/add`, formData, 'Car model added successfully!');
+  });
 
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        try {
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="bx bx-loader bx-spin"></i> Saving...';
-
-            const response = await fetch('http://localhost:3000/api/products/add', {
-                method: 'POST',
-                body: formData,
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to add product');
-            }
-
-            const result = await response.json();
-            showNotification('Product added successfully!', 'success');
-            e.target.reset();
-            document.getElementById('imagePreview').innerHTML = '';
-        } catch (err) {
-            console.error("Submission error:", err);
-            showNotification(`Error: ${err.message}`, 'error');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="bx bx-save"></i> Save Product';
-        }
+  // Product Form
+  document.getElementById('productForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('name', document.getElementById('productName').value);
+    formData.append('carId', document.getElementById('productCar').value);
+    formData.append('description', document.getElementById('productDescription').value || 'No description');
+    formData.append('price', document.getElementById('productPrice').value);
+    
+    Array.from(document.getElementById('productImages').files).forEach(file => {
+      formData.append('photos', file);
     });
+
+    await submitForm(this, `${API_ENDPOINTS.PRODUCTS}/add`, formData, 'Product added successfully!');
+  });
 }
 
+// Generic Form Submission Handler
+async function submitForm(form, url, formData, successMessage) {
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  try {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bx bx-loader bx-spin"></i> Processing...';
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      headers: { 
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || errorData.message || 'Unknown error occurred');
+    }
+
+    form.reset();
+    const previewId = form.querySelector('[id$="Preview"]')?.id;
+    if (previewId) document.getElementById(previewId).innerHTML = '';
+    
+    showNotification(successMessage, 'success');
+  } catch (err) {
+    console.error('Submission error:', err);
+    showNotification(`Error: ${err.message}`, 'error');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = submitBtn.dataset.originalText || 'Submit';
+  }
+}
+
+// Brand Loading Functions
 async function loadBrandsForModelForm() {
-    const brandSelect = document.getElementById('modelBrand');
-    
-    try {
-        const response = await fetch('http://localhost:3000/api/brands/get', {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        });
-        if (!response.ok) throw new Error('Failed to load brands');
-        
-        const brands = await response.json();
-        brandSelect.innerHTML = '<option value="">-- Select Brand --</option>';
-        brands.forEach(brand => {
-            brandSelect.innerHTML += `<option value="${brand._id}">${brand.name}</option>`;
-        });
-    } catch (err) {
-        console.error("Brand loading error:", err);
-        showNotification('Failed to load brands', 'error');
-    }
+  await loadBrands('modelBrand');
 }
 
-document.getElementById('modelForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+async function loadBrandsForProductForm() {
+  const brandSelect = await loadBrands('productBrand');
+  if (brandSelect) {
+    brandSelect.addEventListener('change', async (e) => {
+      const brandId = e.target.value;
+      const carSelect = document.getElementById('productCar');
+      carSelect.disabled = !brandId;
+      
+      if (brandId) {
+        await loadCarsForProductForm(brandId);
+      }
+    });
+  }
+}
+
+async function loadBrands(selectId) {
+  const brandSelect = document.getElementById(selectId);
+  if (!brandSelect) return null;
+  
+  try {
+    const response = await fetch(`${API_ENDPOINTS.BRANDS}/get`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
     
-    const brandId = document.getElementById('modelBrand').value;
-    const modelName = document.getElementById('modelName').value;
-    const modelYear = document.getElementById('modelYear').value;
-    const modelImages = document.getElementById('modelImages').files;
+    if (!response.ok) throw new Error('Failed to load brands');
     
-    if (!brandId || !modelName || !modelYear || modelImages.length === 0) {
-        showNotification('Please fill all required fields', 'error');
-        return;
-    }
+    const brands = await response.json();
+    brandSelect.innerHTML = '<option value="">-- Select Brand --</option>';
+    brands.forEach(brand => {
+      brandSelect.innerHTML += `<option value="${brand._id}">${brand.name}</option>`;
+    });
+    
+    return brandSelect;
+  } catch (err) {
+    console.error("Brand loading error:", err);
+    showNotification('Failed to load brands', 'error');
+    return null;
+  }
+}
 
-    try {
-        const formData = new FormData();
-        formData.append('brandId', brandId);
-        formData.append('name', modelName);
-        formData.append('year', modelYear);
-        
-        for (let i = 0; i < modelImages.length; i++) {
-            formData.append('photos', modelImages[i]);
-        }
+async function loadCarsForProductForm(brandId) {
+  const carSelect = document.getElementById('productCar');
+  if (!carSelect) return;
+  
+  try {
+    const response = await fetch(`${API_ENDPOINTS.CARS}/get?brandId=${brandId}`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    
+    if (!response.ok) throw new Error('Failed to load car models');
+    
+    const cars = await response.json();
+    carSelect.innerHTML = '<option value="">-- Select Model --</option>';
+    cars.forEach(car => {
+      carSelect.innerHTML += `<option value="${car._id}">${car.name} (${car.year})</option>`;
+    });
+  } catch (err) {
+    console.error("Car loading error:", err);
+    showNotification('Failed to load car models', 'error');
+  }
+}
 
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="bx bx-loader bx-spin"></i> Adding...';
+// Sidebar Management
+const sideMenu = document.querySelector("aside");
+const menuBtn = document.getElementById("menu-btn");
+const closeBtn = document.getElementById("close-btn");
 
-        const response = await fetch('http://localhost:3000/api/cars/add', {
-            method: 'POST',
-            body: formData,
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `Failed to add car model: ${response.status}`);
-        }
-
-        const data = await response.json();
-        this.reset();
-        document.getElementById('modelImagesPreview').innerHTML = '';
-        showNotification('Car model added successfully!', 'success');
-        
-        if (document.getElementById('productCar')) {
-            const currentBrand = document.getElementById('productBrand').value;
-            if (currentBrand === brandId) {
-                await loadCarsForProductForm(brandId);
-            }
-        }
-        
-    } catch (err) {
-        console.error('Error adding car model:', err);
-        showNotification(`Error: ${err.message}`, 'error');
-    } finally {
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="bx bx-plus"></i> Add Model';
-    }
-});
-
-const sideMenu = document.querySelector("aside")
-const menuBtn = document.getElementById("menu-btn")
-const closeBtn = document.getElementById("close-btn")
-
-menuBtn.addEventListener('click',()=>{
+if (menuBtn && closeBtn) {
+  menuBtn.addEventListener('click', () => {
     sideMenu.style.display = 'block';
-})
+  });
 
-closeBtn.addEventListener('click',()=>{
+  closeBtn.addEventListener('click', () => {
     sideMenu.style.display = 'none';
-})
+  });
+
+  // Close sidebar when clicking outside on mobile
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768 && 
+        !sideMenu.contains(e.target) && 
+        e.target !== menuBtn) {
+      sideMenu.style.display = 'none';
+    }
+  });
+}

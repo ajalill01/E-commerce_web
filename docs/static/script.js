@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadBrands() {
         showLoading();
         try {
-            const response = await fetch('http://localhost:3000/api/brands/get');
+            const response = await fetch('https://e-commerce-web-1nmc.onrender.com/api/brands/get');
             if (!response.ok) throw new Error('Failed to load brands');
             brands = await response.json();
             
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadCars(brandId) {
         showLoading();
         try {
-            const response = await fetch(`http://localhost:3000/api/cars/get?brandId=${brandId}`);
+            const response = await fetch(`https://e-commerce-web-1nmc.onrender.com/api/cars/get?brandId=${brandId}`);
             if (!response.ok) throw new Error('Failed to load cars');
             cars = await response.json();
             
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadAllProducts() {
         showLoading();
         try {
-            const response = await fetch('http://localhost:3000/api/products/get');
+            const response = await fetch('https://e-commerce-web-1nmc.onrender.com/api/products/get');
             if (!response.ok) throw new Error('Failed to load products');
             allProducts = await response.json();
             filteredProducts = [...allProducts];

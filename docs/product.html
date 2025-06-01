@@ -153,114 +153,131 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const productDetail = document.getElementById('product-detail');
-            const loading = document.getElementById('loading');
-            
-            // Get product ID from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
-            
-            if (!productId) {
-                window.location.href = 'index.html';
-                return;
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // DOM Elements
+        const productDetail = document.getElementById('product-detail');
+        const loading = document.getElementById('loading');
+        
+        // API Configuration
+        const API_BASE_URL = "https://e-commerce-web-1nmc.onrender.com";
+        const PRODUCTS_ENDPOINT = `${API_BASE_URL}/api/products/get`;
+        
+        // Get product ID from URL
+        const productId = new URLSearchParams(window.location.search).get('id');
+        
+        if (!productId) {
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        loadProductDetails(productId);
+        
+        async function loadProductDetails(id) {
+            showLoading();
+            try {
+                const product = await fetchProduct(id);
+                renderProductDetails(product);
+            } catch (error) {
+                console.error('Error loading product:', error);
+                showErrorState(error.message || 'Failed to load product details');
+            } finally {
+                hideLoading();
             }
-            
-            loadProductDetails(productId);
-            
-            async function loadProductDetails(id) {
-                showLoading();
-                try {
-                    const response = await fetch(`http://localhost:3000/api/products/get/${id}`);
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || 'Product not found');
-                    }
-                    
-                    const product = await response.json();
-                    renderProductDetails(product);
-                    
-                } catch (error) {
-                    console.error('Error loading product:', error);
-                    showErrorState(error.message);
-                } finally {
-                    hideLoading();
-                }
-            }
+        }
 
-            function renderProductDetails(product) {
-                // Main product image
-                const mainImage = product.images[0]?.url || getPlaceholderImage(600, 400, 'Product Image');
-                
-                // Thumbnail images
-                const thumbnails = product.images.length > 0 
-                    ? product.images.map(img => `
-                        <img src="${img.url}" 
-                             alt="${product.name}" 
-                             onerror="this.src='${getPlaceholderImage(100, 100, 'Thumbnail')}">
-                    `).join('')
-                    : '<div class="no-images">No additional images</div>';
-                
-                productDetail.innerHTML = `
-                    <div class="product-gallery">
-                        <img src="${mainImage}" class="main-image" id="main-image">
-                        ${thumbnails}
-                    </div>
-                    <div class="product-info">
-                        <h1 class="product-title">${product.name}</h1>
-                        <div class="product-price">$${product.price?.toFixed(2) || '0.00'}</div>
-                        
-                        <div class="product-meta">
-                            <div>
-                                <i class="fas fa-tag"></i> ${product.car?.brand?.name || 'No brand'}
-                            </div>
-                            <div>
-                                <i class="fas fa-car"></i> ${product.car?.name || 'No model'}
-                            </div>
+        async function fetchProduct(id) {
+            const response = await fetch(`${PRODUCTS_ENDPOINT}/${id}`);
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Product not found');
+            }
+            
+            return await response.json();
+        }
+
+        function renderProductDetails(product) {
+            const mainImage = getProductImage(product.images[0]?.url, 600, 400, 'Product Image');
+            const thumbnails = createThumbnails(product);
+            
+            productDetail.innerHTML = `
+                <div class="product-gallery">
+                    <img src="${mainImage}" class="main-image" id="main-image">
+                    ${thumbnails}
+                </div>
+                <div class="product-info">
+                    <h1 class="product-title">${product.name}</h1>
+                    <div class="product-price">$${product.price?.toFixed(2) || '0.00'}</div>
+                    
+                    <div class="product-meta">
+                        <div>
+                            <i class="fas fa-tag"></i> ${product.car?.brand?.name || 'No brand'}
                         </div>
-                        
-                        <div class="product-description">
-                            ${product.description || 'No description available.'}
+                        <div>
+                            <i class="fas fa-car"></i> ${product.car?.name || 'No model'}
                         </div>
-                        
-                        <a href="checkout.html?productId=${product._id}" class="buy-now-btn">
-                            <i class="fas fa-shopping-bag"></i> Buy Now
-                        </a>
                     </div>
-                `;
-                
-                // Setup thumbnail navigation
-                document.querySelectorAll('.product-gallery img:not(.main-image)').forEach(img => {
-                    img.addEventListener('click', () => {
-                        document.getElementById('main-image').src = img.src;
-                    });
+                    
+                    <div class="product-description">
+                        ${product.description || 'No description available.'}
+                    </div>
+                    
+                    <a href="checkout.html?productId=${product._id}" class="buy-now-btn">
+                        <i class="fas fa-shopping-bag"></i> Buy Now
+                    </a>
+                </div>
+            `;
+            
+            setupThumbnailNavigation();
+        }
+        
+        function createThumbnails(product) {
+            if (product.images.length === 0) {
+                return '<div class="no-images">No additional images</div>';
+            }
+            
+            return product.images.map(img => `
+                <img src="${img.url}" 
+                     alt="${product.name}" 
+                     onerror="this.src='${getPlaceholderImage(100, 100, 'Thumbnail')}">
+            `).join('');
+        }
+        
+        function getProductImage(imageUrl, width, height, altText) {
+            return imageUrl || getPlaceholderImage(width, height, altText);
+        }
+        
+        function setupThumbnailNavigation() {
+            document.querySelectorAll('.product-gallery img:not(.main-image)').forEach(img => {
+                img.addEventListener('click', () => {
+                    document.getElementById('main-image').src = img.src;
                 });
-            }
-            
-            function showErrorState(message) {
-                productDetail.innerHTML = `
-                    <div class="error-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>${message}</p>
-                        <a href="index.html">Return to products</a>
-                    </div>
-                `;
-            }
-            
-            function getPlaceholderImage(width, height, text) {
-                return `data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"%3E%3Crect fill="%23eee" width="${width}" height="${height}"%3E%3C/rect%3E%3Ctext fill="%23aaa" font-family="sans-serif" font-size="20" dy=".3em" font-weight="bold" x="50%" y="50%" text-anchor="middle"%3E${text}%3C/text%3E%3C/svg%3E`;
-            }
-            
-            function showLoading() {
-                loading.style.display = 'flex';
-            }
-            
-            function hideLoading() {
-                loading.style.display = 'none';
-            }
-        });
-    </script>
+            });
+        }
+        
+        function showErrorState(message) {
+            productDetail.innerHTML = `
+                <div class="error-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>${message}</p>
+                    <a href="index.html">Return to products</a>
+                </div>
+            `;
+        }
+        
+        function getPlaceholderImage(width, height, text) {
+            return `data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"%3E%3Crect fill="%23eee" width="${width}" height="${height}"%3E%3C/rect%3E%3Ctext fill="%23aaa" font-family="sans-serif" font-size="20" dy=".3em" font-weight="bold" x="50%" y="50%" text-anchor="middle"%3E${text}%3C/text%3E%3C/svg%3E`;
+        }
+        
+        function showLoading() {
+            loading.style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            loading.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

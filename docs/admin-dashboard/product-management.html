@@ -952,169 +952,166 @@ aside .sidebar a:hover .bx {
         </div>
     </div>
 
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', function() {
-    applySavedTheme(); // This was misspelled as "pplySavedTheme"
+    // API Configuration
+    const API_BASE_URL = "https://e-commerce-web-1nmc.onrender.com";
+    const PRODUCTS_ENDPOINT = `${API_BASE_URL}/api/products`;
     
-    // Fetch products from the backend
+    // Initialize the page
+    applySavedTheme();
+    setupSidebar();
     fetchProducts();
-    
-    // Sidebar functionality
-    const sideMenu = document.getElementById("side-menu");
-    const menuBtn = document.getElementById("menu-btn");
-    const closeBtn = document.getElementById("close-btn");
-    
-    // Toggle sidebar on menu button click
-    menuBtn.addEventListener('click', () => {
-        sideMenu.classList.toggle('active');
-    });
-    
-    // Close sidebar on close button click
-    closeBtn.addEventListener('click', () => {
-        sideMenu.classList.remove('active');
-    });
-    
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768 && 
-            !sideMenu.contains(e.target) && 
-            e.target !== menuBtn) {
-            sideMenu.classList.remove('active');
-        }
-    });
-});
-        async function fetchProducts() {
-            try {
-                const response = await fetch('http://localhost:3000/api/products/get');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch products');
-                }
-                const products = await response.json();
-                displayProducts(products);
-            } catch (error) {
-                console.error('Error fetching products:', error);
-                document.getElementById('products-container').innerHTML = 
-                    '<p class="error">Failed to load products. Please try again later.</p>';
-            }
-        }
 
-        function displayProducts(products) {
-            const container = document.getElementById('products-container');
+    async function fetchProducts() {
+        try {
+            const response = await fetch(`${PRODUCTS_ENDPOINT}/get`, {
+                headers: {
+                    "Authorization": `Bearer ${getAuthToken()}`
+                }
+            });
             
-            if (products.length === 0) {
-                container.innerHTML = '<p>No products found.</p>';
-                return;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             
-            container.innerHTML = '';
-            
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                
-                // Use the first image if available, or a placeholder
-                const imageUrl = product.images && product.images.length > 0 
-                    ? product.images[0].url 
-                    : 'https://via.placeholder.com/300x200?text=No+Image';
-                
-                productCard.innerHTML = `
-                    <img src="${imageUrl}" alt="${product.name}" class="product-image">
-                    <div class="product-info">
-                        <h3>${product.name}</h3>
-                        <p>${product.description || 'No description available'}</p>
-                        <div class="product-price">$${product.price?.toFixed(2) || '0.00'}</div>
-                        <div class="product-actions">
-                            <small>ID: ${product._id}</small>
-                            <div class="dropdown">
-                                <button class="dropdown-btn"><i class="bx bx-dots-vertical-rounded"></i></button>
-                                <div class="dropdown-content">
-                                    <a href="#" class="delete-btn" data-id="${product._id}">Delete</a>
-                                </div>
+            const products = await response.json();
+            displayProducts(products);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            showErrorMessage('Failed to load products. Please try again later.');
+        }
+    }
+
+    function displayProducts(products) {
+        const container = document.getElementById('products-container');
+        
+        if (!products || products.length === 0) {
+            container.innerHTML = '<p class="empty-message">No products found.</p>';
+            return;
+        }
+        
+        container.innerHTML = products.map(product => `
+            <div class="product-card">
+                <img src="${getProductImageUrl(product)}" 
+                     alt="${product.name}" 
+                     class="product-image"
+                     onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p>${product.description || 'No description available'}</p>
+                    <div class="product-price">$${product.price?.toFixed(2) || '0.00'}</div>
+                    <div class="product-actions">
+                        <small>ID: ${product._id}</small>
+                        <div class="dropdown">
+                            <button class="dropdown-btn"><i class="bx bx-dots-vertical-rounded"></i></button>
+                            <div class="dropdown-content">
+                                <a href="#" class="delete-btn" data-id="${product._id}">Delete</a>
                             </div>
                         </div>
                     </div>
-                `;
-                
-                container.appendChild(productCard);
-            });
-            
-            // Add event listeners to all delete buttons
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const productId = this.getAttribute('data-id');
-                    if (confirm('Are you sure you want to delete this product?')) {
-                        deleteProduct(productId);
-                    }
-                });
-            });
-        }
-
-        async function deleteProduct(productId) {
-            try {
-                const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
-                    method: 'DELETE',
-                          headers: {
-        "Authorization": `Bearer ${getAuthToken()}`
-      }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to delete product');
-                }
-                
-                // Refresh the product list after deletion
-                fetchProducts();
-            } catch (error) {
-                console.error('Error deleting product:', error);
-                alert('Failed to delete product. Please try again.');
-            }
-        }
-
+                </div>
+            </div>
+        `).join('');
         
-function getAuthToken() {
-  return localStorage.getItem('token') || '';
-}
-const sideMenu = document.querySelector("aside")
-const closeBtn = document.getElementById("close-btn")
-const menuBtn = document.getElementById("menu-btn")
-const themeToggler = document.querySelector(".them-toggler");
-
-
-
-menuBtn.addEventListener('click', () => {
-  sideMenu.style.display = 'block';
-});
-
-closeBtn.addEventListener('click', () => {
-  sideMenu.style.display = 'none';
-});
-
-
-themeToggler.addEventListener('click', () => {
-    document.body.classList.toggle('dark-theme-variables');
-    themeToggler.querySelector('.bx:nth-child(1)').classList.toggle('active');
-    themeToggler.querySelector('.bx:nth-child(2)').classList.toggle('active');
-    
-    // Save theme preference
-    const isDarkMode = document.body.classList.contains('dark-theme-variables');
-    localStorage.setItem('darkMode', isDarkMode ? '1' : '0');
-});
-function applySavedTheme() {
-    const savedTheme = localStorage.getItem('darkMode');
-    const themeToggler = document.querySelector(".them-toggler");
-    
-    if (savedTheme === '1') {
-        document.body.classList.add('dark-theme-variables');
-        themeToggler.querySelector('.bx:nth-child(1)').classList.remove('active');
-        themeToggler.querySelector('.bx:nth-child(2)').classList.add('active');
-    } else {
-        document.body.classList.remove('dark-theme-variables');
-        themeToggler.querySelector('.bx:nth-child(1)').classList.add('active');
-        themeToggler.querySelector('.bx:nth-child(2)').classList.remove('active');
+        setupDeleteButtons();
     }
-}
 
-    </script>
+    function getProductImageUrl(product) {
+        return product.images?.length > 0 ? product.images[0].url : '';
+    }
+
+    function setupDeleteButtons() {
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const productId = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this product?')) {
+                    try {
+                        await deleteProduct(productId);
+                        fetchProducts(); // Refresh the list
+                    } catch (error) {
+                        console.error('Delete error:', error);
+                        alert('Failed to delete product. Please try again.');
+                    }
+                }
+            });
+        });
+    }
+
+    async function deleteProduct(productId) {
+        const response = await fetch(`${PRODUCTS_ENDPOINT}/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": `Bearer ${getAuthToken()}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to delete product: ${response.status}`);
+        }
+    }
+
+    function getAuthToken() {
+        return localStorage.getItem('token') || '';
+    }
+
+    function setupSidebar() {
+        const sideMenu = document.querySelector("aside");
+        const closeBtn = document.getElementById("close-btn");
+        const menuBtn = document.getElementById("menu-btn");
+        
+        menuBtn.addEventListener('click', () => {
+            sideMenu.style.display = 'block';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sideMenu.style.display = 'none';
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && 
+                !sideMenu.contains(e.target) && 
+                e.target !== menuBtn) {
+                sideMenu.style.display = 'none';
+            }
+        });
+    }
+
+    function applySavedTheme() {
+        const savedTheme = localStorage.getItem('darkMode');
+        const themeToggler = document.querySelector(".them-toggler");
+        
+        if (!themeToggler) return;
+        
+        if (savedTheme === '1') {
+            document.body.classList.add('dark-theme-variables');
+            themeToggler.querySelector('.bx:nth-child(1)').classList.remove('active');
+            themeToggler.querySelector('.bx:nth-child(2)').classList.add('active');
+        } else {
+            document.body.classList.remove('dark-theme-variables');
+            themeToggler.querySelector('.bx:nth-child(1)').classList.add('active');
+            themeToggler.querySelector('.bx:nth-child(2)').classList.remove('active');
+        }
+        
+        // Setup theme toggler
+        themeToggler.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme-variables');
+            themeToggler.querySelector('.bx:nth-child(1)').classList.toggle('active');
+            themeToggler.querySelector('.bx:nth-child(2)').classList.toggle('active');
+            
+            // Save theme preference
+            const isDarkMode = document.body.classList.contains('dark-theme-variables');
+            localStorage.setItem('darkMode', isDarkMode ? '1' : '0');
+        });
+    }
+
+    function showErrorMessage(message) {
+        const container = document.getElementById('products-container');
+        container.innerHTML = `<p class="error">${message}</p>`;
+    }
+});
+</script>
 </body>
 </html>

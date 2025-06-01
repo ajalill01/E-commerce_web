@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const productDetail = document.getElementById('product-detail');
     const loading = document.getElementById('loading');
     
-
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
     
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadProductDetails(id) {
         showLoading();
         try {
-            const response = await fetch(`http://localhost:3000/api/products/get/${id}`);
+            const response = await fetch(`https://e-commerce-web-1nmc.onrender.com/api/products/get/${id}`);
             
             if (!response.ok) {
                 const errorData = await response.json();
@@ -35,10 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderProductDetails(product) {
-
         const mainImage = product.images[0]?.url || getPlaceholderImage(600, 400, 'Product Image');
         
-
         const thumbnails = product.images.length > 0 
             ? product.images.map(img => `
                 <img src="${img.url}" 
@@ -83,20 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-
         setupThumbnailNavigation();
-        
-
         setupQuantityControls();
-        
-
         setupAddToCartButton(product);
-        
-
         updateCartActions();
     }
-    
-
     
     function setupThumbnailNavigation() {
         document.querySelectorAll('.product-gallery img:not(.main-image)').forEach(img => {
@@ -155,15 +143,12 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             
             document.getElementById('viewCartBtn').addEventListener('click', () => {
-
                 alert(`${cart.length} items in cart. Ready to checkout?`);
             });
         } else {
             cartActions.innerHTML = '';
         }
     }
-    
-
     
     function getCart() {
         return JSON.parse(localStorage.getItem('cart')) || [];
@@ -185,8 +170,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         saveCart(cart);
     }
-    
-
     
     function showCartNotification(product) {
         const notification = document.createElement('div');

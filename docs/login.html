@@ -126,7 +126,8 @@
     </form>
   </div>
 
-  <script>
+<script>
+    // DOM Elements
     const form = document.getElementById("loginForm");
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
@@ -135,40 +136,67 @@
     const spinner = document.getElementById("spinner");
     const errorMessage = document.getElementById("error-message");
 
+    // API Configuration
+    const API_BASE_URL = "https://e-commerce-web-1nmc.onrender.com";
+    const LOGIN_ENDPOINT = `${API_BASE_URL}/api/auth/login`;
+
     form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      btnText.style.display = "none";
-      spinner.style.display = "inline-block";
-      errorMessage.style.display = "none";
+        e.preventDefault();
+        setLoadingState(true);
+        clearError();
 
-      const username = usernameInput.value.trim();
-      const password = passwordInput.value.trim();
+        try {
+            const response = await authenticateUser(
+                usernameInput.value.trim(),
+                passwordInput.value.trim()
+            );
 
-      try {
-        const res = await fetch("http://localhost:3000/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
+            if (response.success) {
+                handleSuccessfulLogin(response.token);
+            } else {
+                showError(response.message || "Invalid credentials");
+            }
+        } catch (err) {
+            showError("Connection error. Please try again.");
+            console.error("Login error:", err);
+        } finally {
+            setLoadingState(false);
+        }
+    });
+
+    async function authenticateUser(username, password) {
+        const response = await fetch(LOGIN_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
         });
 
-        const data = await res.json();
-
-        if (data.success) {
-          localStorage.setItem("token", data.token);
-          window.location.href = "/docs/admin-dashboard/myAdmin.html";
-        } else {
-          errorMessage.textContent = data.message || "Invalid credentials";
-          errorMessage.style.display = "block";
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-      } catch (err) {
-        errorMessage.textContent = "Connection error. Please try again.";
+
+        return await response.json();
+    }
+
+    function handleSuccessfulLogin(token) {
+        localStorage.setItem("token", token);
+        window.location.href = "/docs/admin-dashboard/myAdmin.html";
+    }
+
+    function setLoadingState(isLoading) {
+        btnText.style.display = isLoading ? "none" : "inline-block";
+        spinner.style.display = isLoading ? "inline-block" : "none";
+        loginBtn.disabled = isLoading;
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
         errorMessage.style.display = "block";
-        console.error("Login error:", err);
-      } finally {
-        btnText.style.display = "inline-block";
-        spinner.style.display = "none";
-      }
-    });
-  </script>
+    }
+
+    function clearError() {
+        errorMessage.style.display = "none";
+    }
+</script>
 </body>
 </html>

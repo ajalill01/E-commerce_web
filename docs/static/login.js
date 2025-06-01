@@ -4,41 +4,68 @@ const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("loginBtn");
 const btnText = document.getElementById("btnText");
 const spinner = document.getElementById("spinner");
-const passError = document.getElementById("incorret-password")
+const passError = document.getElementById("incorret-password");
+
+// API Configuration
+const API_BASE_URL = "https://e-commerce-web-1nmc.onrender.com";
+const LOGIN_ENDPOINT = `${API_BASE_URL}/api/auth/login`;
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  btnText.style.display = "none";
-  spinner.style.display = "block";
-
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value.trim();
+  toggleLoadingState(true);
+  
+  const credentials = {
+    username: usernameInput.value.trim(),
+    password: passwordInput.value.trim()
+  };
 
   try {
-    const res = await fetch("http://localhost:3000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      console.log("Token received:", data.token);
-      localStorage.setItem("token", data.token);
-      console.log("Token stored:", localStorage.getItem("token"));
-      window.location.href = "/docs/admin-dashboard/myAdmin.html";
+    const response = await authenticateUser(credentials);
+    
+    if (response.success) {
+      handleSuccessfulLogin(response.token);
     } else {
-      passError.textContent = data.message;       
-      passError.style.display = 'block';
+      showError(response.message || "Invalid credentials");
     }
-  } catch (err) {
-    console.error("Login error:", err);
-    passError.textContent = "Something went wrong";
-    passError.style.display = 'block';
+  } catch (error) {
+    console.error("Login error:", error);
+    showError("Connection error. Please try again later.");
   } finally {
-    btnText.style.display = "inline";
-    spinner.style.display = "none";
+    toggleLoadingState(false);
   }
 });
+
+async function authenticateUser(credentials) {
+  const response = await fetch(LOGIN_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials)
+  });
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  return await response.json();
+}
+
+function handleSuccessfulLogin(token) {
+  localStorage.setItem("token", token);
+  console.log("Authentication token stored successfully");
+  window.location.href = "/docs/admin-dashboard/myAdmin.html";
+}
+
+function showError(message) {
+  passError.textContent = message;
+  passError.style.display = 'block';
+}
+
+function toggleLoadingState(isLoading) {
+  btnText.style.display = isLoading ? "none" : "inline";
+  spinner.style.display = isLoading ? "block" : "none";
+  
+  // Disable/enable form elements during loading
+  usernameInput.disabled = isLoading;
+  passwordInput.disabled = isLoading;
+  loginBtn.disabled = isLoading;
+}

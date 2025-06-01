@@ -267,7 +267,7 @@
             
             async function loadProductDetails(id) {
                 try {
-                    const response = await fetch(`http://localhost:3000/api/products/get/${id}`);
+                    const response = await fetch(`https://e-commerce-web-1nmc.onrender.com/api/products/get/${id}`);
                     
                     if (!response.ok) {
                         throw new Error('Product not found');
@@ -325,7 +325,7 @@
                         }]
                     };
                     
-                    const response = await fetch('http://localhost:3000/api/orders/add', {
+                    const response = await fetch('https://e-commerce-web-1nmc.onrender.com/api/orders/add', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
