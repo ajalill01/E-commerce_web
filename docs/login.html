@@ -127,7 +127,6 @@
   </div>
 
 <script>
-    // DOM Elements
     const form = document.getElementById("loginForm");
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
@@ -136,7 +135,6 @@
     const spinner = document.getElementById("spinner");
     const errorMessage = document.getElementById("error-message");
 
-    // API Configuration
     const API_BASE_URL = "https://e-commerce-web-1nmc.onrender.com";
     const LOGIN_ENDPOINT = `${API_BASE_URL}/api/auth/login`;
 
@@ -180,7 +178,9 @@
 
     function handleSuccessfulLogin(token) {
         localStorage.setItem("token", token);
-        window.location.href = "/docs/admin-dashboard/myAdmin.html";
+        const isGitHub = window.location.host.includes('github.io');
+        const basePath = isGitHub ? '/E-commerce_web' : '';
+        window.location.href = `${basePath}/docs/admin-dashboard/myAdmin.html`;
     }
 
     function setLoadingState(isLoading) {

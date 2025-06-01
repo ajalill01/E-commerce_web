@@ -144,7 +144,6 @@ function setupFormSubmissions() {
     const formData = new FormData();
     formData.append('name', document.getElementById('productName').value);
     formData.append('carId', document.getElementById('productCar').value);
-    formData.append('description', document.getElementById('productDescription').value || 'No description');
     formData.append('price', document.getElementById('productPrice').value);
     
     Array.from(document.getElementById('productImages').files).forEach(file => {
