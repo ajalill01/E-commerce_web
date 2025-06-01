@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/orders.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <title>Orders</title>
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="assets/car-decotaion-logo.png" alt="logo">
+                    <h2>CARGLAM</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <i class='bx bx-x'></i>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="myAdmin.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="product-management.html">
+                    <i class='bx bxs-shopping-bag-alt'></i>
+                    <h3>My store</h3>
+                </a>
+                <a href="store.html">
+                    <i class='bx bxs-car'></i>
+                    <h3>Car Management</h3>
+                </a>
+                <a href="orders.html" class="active">
+                    <i class='bx bxs-receipt'></i>
+                    <h3>Orders</h3>
+                </a>
+                <a href="#">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <h1>Dashboard</h1>
+            <div class="recent-orders">
+                <h2 id="order-title">Orders</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-body">
+                    </tbody>
+                </table>
+                <div class="order-summary">
+
+        </div>
+            </div>
+
+            <div class="loading-indicator"></div>
+        </main>
+
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <i class='bx bx-menu'></i>
+                </button>
+                <div class="them-toggler">
+                    <i class='bx bx-sun active'></i>
+                    <i class='bx bx-moon'></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/orders.js"></script>
+</body>
+</html>

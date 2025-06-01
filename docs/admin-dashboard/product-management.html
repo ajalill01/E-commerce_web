@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+
+        :root {
+    --color-primary: #4361ee;
+    --color-primary-variant: #3a56d4;
+    --color-primary-light: #e6f0ff;
+    --color-danger: #ff4d6d;
+    --color-success: #38b000;
+    --color-warning: #ff9e00;
+    --color-info: #00b4d8;
+    --color-white: #ffffff;
+    --color-light: #f8f9fa;
+    --color-info-light: #e9ecef;
+    --color-info-dark: #6c757d;
+    --color-dark: #212529;
+    --color-dark-variant: #495057;
+    --color-background: #f5f7ff;
+    --color-menu: rgba(132, 139, 200, 0.18);
+    --box-shadow: 0 0.5rem 1rem rgba(67, 97, 238, 0.1);
+    --box-shadow-card: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+    --poppins: 'Poppins', sans-serif;
+}
+
+.dark-theme-variables {
+    --color-background: #121212;
+    --color-white: #1e1e1e;
+    --color-dark: #e9ecef;
+    --color-dark-variant: #adb5bd;
+    --color-light: rgba(255, 255, 255, 0.1);
+    --color-primary: #5a7dff;
+    --color-primary-variant: #4361ee;
+    --color-danger: #ff758f;
+    --color-success: #4cc9f0;
+    --color-warning: #ffb703;
+    --color-menu: #f6f6f9;
+    --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    --box-shadow-card: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: none;
+    border: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 14px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    font-family: var(--poppins);
+    font-size: 0.88rem;
+    background: var(--color-background);
+    user-select: none;
+    overflow-x: hidden;
+    color: var(--color-dark);
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+h3 {
+    font-size: 0.87rem;
+    margin: 0;
+    padding: 0;
+}
+
+h4 {
+    font-size: 0.8rem;
+}
+
+small {
+    font-size: 0.75rem;
+}
+
+.text-muted {
+    color: var(--color-info-dark);
+}
+
+p {
+    color: var(--color-dark-variant);
+}
+
+b {
+    color: var(--color-dark);
+}
+
+.primary {
+    color: var(--color-primary);
+}
+
+.danger {
+    color: var(--color-danger);
+}
+
+.warning {
+    color: var(--color-warning);
+}
+
+.success {
+    color: var(--color-success);
+}
+html, body {
+  height: 100%;
+}
+
+
+.container {
+    display: grid;
+    width: 100%;
+    margin: 0 auto;
+    height: 100vh;
+    gap: 1.8rem;
+    overflow: hidden; /* Contains scrolling to main */
+    grid-template-columns: 14rem auto;
+}
+
+/* ========== SIDEBAR ========== */
+aside {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+}
+
+aside .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.4rem;
+    padding: 0 1rem;
+}
+
+aside .logo {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+aside .logo img {
+    width: 2rem;
+    height: 2rem;
+}
+
+aside .close {
+    display: none;
+}
+
+aside .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 4rem);
+    position: relative;
+    top: 3rem;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+aside {
+    padding-left: 1rem;  /* Add left padding to entire sidebar */
+}
+
+aside .sidebar a {
+    margin-left: 1rem;   /* Reduce from 2rem to match new padding */
+    width: calc(100% - 1rem); /* Adjust width to account for padding */
+}
+
+aside .sidebar a {
+    display: flex;
+    color: var(--color-info-dark);
+    margin-left: 2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.7rem;
+    transition: all 300ms ease;
+    padding-right: 1rem;
+    width: 100%;
+}
+
+aside .sidebar a .bx {
+    font-size: 1.6rem;
+    transition: all 300ms ease;
+        margin: 0;
+    padding: 0;
+}
+
+aside .sidebar a:last-child {
+    position: absolute;
+    bottom: 2rem;
+    width: calc(100% - 2rem);
+    margin-bottom: 2rem;
+    
+}
+
+aside .sidebar a.active {
+    background: var(--color-light);
+    color: var(--color-primary);
+    margin-left: 0;
+}
+
+aside .sidebar a.active:before {
+    content: "";
+    width: 6px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+aside .sidebar a.active .bx {
+    color: var(--color-primary);
+    margin-left: calc(1rem - 3px);
+}
+
+aside .sidebar a:hover {
+    color: var(--color-primary);
+}
+
+aside .sidebar a:hover .bx {
+    margin-left: 1rem;
+}
+
+
+.right {
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 1rem;
+    background: var(--color-background);
+    z-index: 10;
+}
+
+.right .top {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+}
+
+.right .top #menu-btn{
+    color: var(--color-menu);
+}
+
+.right .top button {
+    display: none;
+}
+
+.right .them-toggler {
+    background: var(--color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.6rem;
+    width: 4.2rem;
+    cursor: pointer;
+    border-radius: var(--border-radius-1);
+}
+
+.right .them-toggler .bx {
+    font-size: 1.2rem;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.right .them-toggler .bx.active {
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--border-radius-1);
+}
+
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: 5rem auto;
+    }
+
+    aside .logo h2,
+    aside .sidebar h3 {
+        display: none;
+    }
+
+    aside .sidebar a {
+        width: 5.6rem;
+        justify-content: center;
+        margin-left: 0;
+    }
+
+    aside .sidebar a .bx {
+        margin-left: 0;
+    }
+
+    aside .sidebar a:last-child {
+        position: relative;
+        margin-top: 2.8rem;
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width  : 100%;
+        grid-template-columns: 1fr;
+        padding: 2rem;
+    }
+
+    aside {
+        position: fixed;
+        width: 18rem;
+        z-index: 100;
+        height: 100vh;
+        left: -100%;
+        background: var(--color-white);
+        box-shadow: var(--box-shadow);
+        padding: var(--card-padding);
+        display: none;
+        animation: showMenu 400ms ease forwards;
+    }
+
+    @keyframes showMenu {
+        to{
+            left : 0;
+        }
+    }
+
+    aside .logo{
+        margin-left: 1rem;
+    }
+
+    aside .logo h2{
+        display: inline;
+    }
+
+    aside .sidebar h3{
+        display: inline;
+    }
+
+    aside .sidebar a{
+        display: flex;
+        align-items: center;
+        width : 100%;
+        height: 3.4rem;
+    }
+
+    aside .sidebar a:last-child{
+        position: absolute;
+        bottom: 5rem;
+        }
+
+
+    /* aside.active {
+        left: 0;
+    } */
+
+    aside .close {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+
+    .right {
+        position: fixed;
+        right: 1rem;
+        top: 1rem;
+    }
+
+    #menu-btn {
+        display: inline-block;
+        position: fixed;
+        left: 1rem;
+        top: 1rem;
+        z-index: 99;
+        background: var(--color-light);
+        border-radius: var(--border-radius-1);
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+}
+        
+        main {
+            margin-top: 1.4rem;
+            padding: 1.5rem;
+            overflow-y: auto;
+            height: calc(100vh - 2rem);
+        }
+
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .product-card {
+            background: var(--color-white);
+            padding: var(--card-padding);
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--box-shadow-card);
+            transition: all 300ms ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            box-shadow: none;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: var(--border-radius-1);
+            margin-bottom: 1rem;
+        }
+
+        .product-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+        }
+
+        .product-info p {
+            margin-bottom: 0.5rem;
+            color: var(--color-dark-variant);
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--color-info-dark);
+            padding: 0.5rem;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--color-white);
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: var(--border-radius-1);
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: var(--color-dark);
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--color-light);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .delete-btn {
+            color: var(--color-danger) !important;
+        }
+
+        .recent-orders {
+            margin-top: 2rem;
+        }
+
+        .recent-orders h2 {
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .loading-spinner {
+            border: 4px solid var(--color-light);
+            border-top: 4px solid var(--color-primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        
+@media (max-width: 600px) {
+    .container {
+        width  : 100%;
+        grid-template-columns: 1fr;
+        padding: 2rem;
+    }
+
+    aside {
+        position: fixed;
+        width: 18rem;
+        z-index: 100;
+        height: 100vh;
+        left: -100%;
+        background: var(--color-white);
+        box-shadow: var(--box-shadow);
+        padding: var(--card-padding);
+        display: none;
+        animation: showMenu 400ms ease forwards;
+    }
+
+    @keyframes showMenu {
+        to{
+            left : 0;
+        }
+    }
+
+    aside .logo{
+        margin-left: 1rem;
+    }
+
+    aside .logo h2{
+        display: inline;
+    }
+
+    aside .sidebar h3{
+        display: inline;
+    }
+
+    aside .sidebar a{
+        display: flex;
+        align-items: center;
+        width : 100%;
+        height: 3.4rem;
+    }
+
+    aside .sidebar a:last-child{
+        position: absolute;
+        bottom: 5rem;
+        }
+
+
+    /* aside.active {
+        left: 0;
+    } */
+
+    aside .close {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    main {
+        margin-left: 0;
+        padding: 1rem;
+        margin-top: 4rem;
+    }
+
+    .right {
+        position: fixed;
+        right: 1rem;
+        top: 1rem;
+    }
+
+    #menu-btn {
+        display: inline-block;
+        position: fixed;
+        left: 1rem;
+        top: 1rem;
+        z-index: 99;
+        background: var(--color-light);
+        border-radius: var(--border-radius-1);
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+}
+
+@media (max-width: 576px) {
+    main .insights {
+        grid-template-columns: 1fr;
+    }
+
+    main .recent-orders {
+        width: 100%;
+    }
+}
+
+#menu-btn {
+            display: none;
+            position: fixed;
+            left: 1rem;
+            top: 1rem;
+            z-index: 99;
+            background: var(--color-light);
+            border-radius: var(--border-radius-1);
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+        
+        /* Update the mobile styles */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                grid-template-columns: 1fr;
+                padding: 0;
+            }
+            
+            aside {
+                position: fixed;
+                width: 18rem;
+                z-index: 100;
+                height: 100vh;
+                left: -100%;
+                background: var(--color-white);
+                box-shadow: var(--box-shadow);
+                padding: var(--card-padding);
+                display: none;
+                animation: showMenu 400ms ease forwards;
+            }
+            
+            @keyframes showMenu {
+                to {
+                    left: 0;
+                }
+            }
+            
+            aside.active {
+                display: block;
+                left: 0;
+            }
+            
+            #menu-btn {
+                display: inline-block;
+            }
+            
+            main {
+                margin-top: 4rem;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+    .container {
+        width  : 100%;
+        grid-template-columns: 1fr;
+        padding: 2rem;
+    }
+
+    aside {
+        position: fixed;
+        width: 18rem;
+        z-index: 100;
+        height: 100vh;
+        left: -100%;
+        background: var(--color-white);
+        box-shadow: var(--box-shadow);
+        padding: var(--card-padding);
+        display: none;
+        animation: showMenu 400ms ease forwards;
+    }
+
+    @keyframes showMenu {
+        to{
+            left : 0;
+        }
+    }
+
+    aside .logo{
+        margin-left: 1rem;
+    }
+
+    aside .logo h2{
+        display: inline;
+    }
+
+    aside .sidebar h3{
+        display: inline;
+    }
+
+    aside .sidebar a{
+        display: flex;
+        align-items: center;
+        width : 100%;
+        height: 3.4rem;
+    }
+
+    aside .sidebar a:last-child{
+        position: absolute;
+        bottom: 5rem;
+        }
+
+
+    /* aside.active {
+        left: 0;
+    } */
+
+    aside .close {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    main {
+        margin-left: 0;
+        padding: 1rem;
+        margin-top: 4rem;
+    }
+
+    .right {
+        position: fixed;
+        right: 1rem;
+        top: 1rem;
+    }
+
+    #menu-btn {
+        display: inline-block;
+        position: fixed;
+        left: 1rem;
+        top: 1rem;
+        z-index: 99;
+        background: var(--color-light);
+        border-radius: var(--border-radius-1);
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+}
+
+
+/* ================= RESPONSIVE SIDEBAR ================= */
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: 5rem auto;
+        padding: 0;
+    }
+
+    aside .logo h2,
+    aside .sidebar h3 {
+        display: none;
+    }
+
+    aside .sidebar a {
+        width: 5.6rem;
+        justify-content: center;
+        margin-left: 0;
+    }
+
+    aside .sidebar a .bx {
+        margin-left: 0;
+    }
+
+    aside .sidebar a:last-child {
+        position: relative;
+        margin-top: 2.8rem;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        grid-template-columns: 1fr;
+    }
+
+    aside {
+        position: fixed;
+        width: 18rem;
+        z-index: 100;
+        height: 100vh;
+        left: -100%;
+        background: var(--color-white);
+        box-shadow: var(--box-shadow);
+        padding: var(--card-padding);
+        display: none;
+        animation: showMenu 400ms ease forwards;
+    }
+
+    @keyframes showMenu {
+        to {
+            left: 0;
+        }
+    }
+
+    aside .logo {
+        margin-left: 1rem;
+    }
+
+    aside .logo h2 {
+        display: inline;
+    }
+
+    aside .sidebar h3 {
+        display: inline;
+    }
+
+    aside .sidebar a {
+        width: 100%;
+        height: 3.4rem;
+        justify-content: flex-start;
+    }
+
+    aside .sidebar a:last-child {
+        position: absolute;
+        bottom: 5rem;
+    }
+
+    aside .close {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    main {
+        margin-top: 4rem;
+        padding: 1rem;
+    }
+
+    #menu-btn {
+        display: inline-block;
+        position: fixed;
+        left: 1rem;
+        top: 1rem;
+        z-index: 99;
+        background: var(--color-light);
+        border-radius: var(--border-radius-1);
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+
+    .right {
+        position: fixed;
+        right: 1rem;
+        top: 1rem;
+    }
+}
+
+/* Ensure the menu button is hidden on desktop */
+@media (min-width: 769px) {
+    #menu-btn {
+        display: none;
+    }
+    
+    aside {
+        display: flex !important;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="assets/car-decotaion-logo.png" alt="logo">
+                    <h2>CARGLAM</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <i class='bx bx-x'></i>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="myAdmin.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="product-management.html" class="active">
+                    <i class='bx bxs-shopping-bag-alt'></i>
+                    <h3>My store</h3>
+                </a>
+                <a href="store.html">
+                    <i class='bx bxs-car'></i>
+                    <h3>Car Management</h3>
+                </a>
+                <a href="orders.html">
+                    <i class='bx bxs-receipt'></i>
+                    <h3>Orders</h3>
+                </a>
+                <a href="#">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <h1>Products</h1>
+            
+            <div class="recent-orders">
+                <h2>Manage Products</h2>
+                <div id="products-container" class="products-container">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+                <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <i class='bx bx-menu'></i>
+                </button>
+                <div class="them-toggler">
+                    <i class='bx bx-sun active'></i>
+                    <i class='bx bx-moon'></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    applySavedTheme(); // This was misspelled as "pplySavedTheme"
+    
+    // Fetch products from the backend
+    fetchProducts();
+    
+    // Sidebar functionality
+    const sideMenu = document.getElementById("side-menu");
+    const menuBtn = document.getElementById("menu-btn");
+    const closeBtn = document.getElementById("close-btn");
+    
+    // Toggle sidebar on menu button click
+    menuBtn.addEventListener('click', () => {
+        sideMenu.classList.toggle('active');
+    });
+    
+    // Close sidebar on close button click
+    closeBtn.addEventListener('click', () => {
+        sideMenu.classList.remove('active');
+    });
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768 && 
+            !sideMenu.contains(e.target) && 
+            e.target !== menuBtn) {
+            sideMenu.classList.remove('active');
+        }
+    });
+});
+        async function fetchProducts() {
+            try {
+                const response = await fetch('http://localhost:3000/api/products/get');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch products');
+                }
+                const products = await response.json();
+                displayProducts(products);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                document.getElementById('products-container').innerHTML = 
+                    '<p class="error">Failed to load products. Please try again later.</p>';
+            }
+        }
+
+        function displayProducts(products) {
+            const container = document.getElementById('products-container');
+            
+            if (products.length === 0) {
+                container.innerHTML = '<p>No products found.</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                
+                // Use the first image if available, or a placeholder
+                const imageUrl = product.images && product.images.length > 0 
+                    ? product.images[0].url 
+                    : 'https://via.placeholder.com/300x200?text=No+Image';
+                
+                productCard.innerHTML = `
+                    <img src="${imageUrl}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.description || 'No description available'}</p>
+                        <div class="product-price">$${product.price?.toFixed(2) || '0.00'}</div>
+                        <div class="product-actions">
+                            <small>ID: ${product._id}</small>
+                            <div class="dropdown">
+                                <button class="dropdown-btn"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                <div class="dropdown-content">
+                                    <a href="#" class="delete-btn" data-id="${product._id}">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(productCard);
+            });
+            
+            // Add event listeners to all delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = this.getAttribute('data-id');
+                    if (confirm('Are you sure you want to delete this product?')) {
+                        deleteProduct(productId);
+                    }
+                });
+            });
+        }
+
+        async function deleteProduct(productId) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+                    method: 'DELETE',
+                          headers: {
+        "Authorization": `Bearer ${getAuthToken()}`
+      }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete product');
+                }
+                
+                // Refresh the product list after deletion
+                fetchProducts();
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                alert('Failed to delete product. Please try again.');
+            }
+        }
+
+        
+function getAuthToken() {
+  return localStorage.getItem('token') || '';
+}
+const sideMenu = document.querySelector("aside")
+const closeBtn = document.getElementById("close-btn")
+const menuBtn = document.getElementById("menu-btn")
+const themeToggler = document.querySelector(".them-toggler");
+
+
+
+menuBtn.addEventListener('click', () => {
+  sideMenu.style.display = 'block';
+});
+
+closeBtn.addEventListener('click', () => {
+  sideMenu.style.display = 'none';
+});
+
+
+themeToggler.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme-variables');
+    themeToggler.querySelector('.bx:nth-child(1)').classList.toggle('active');
+    themeToggler.querySelector('.bx:nth-child(2)').classList.toggle('active');
+    
+    // Save theme preference
+    const isDarkMode = document.body.classList.contains('dark-theme-variables');
+    localStorage.setItem('darkMode', isDarkMode ? '1' : '0');
+});
+function applySavedTheme() {
+    const savedTheme = localStorage.getItem('darkMode');
+    const themeToggler = document.querySelector(".them-toggler");
+    
+    if (savedTheme === '1') {
+        document.body.classList.add('dark-theme-variables');
+        themeToggler.querySelector('.bx:nth-child(1)').classList.remove('active');
+        themeToggler.querySelector('.bx:nth-child(2)').classList.add('active');
+    } else {
+        document.body.classList.remove('dark-theme-variables');
+        themeToggler.querySelector('.bx:nth-child(1)').classList.add('active');
+        themeToggler.querySelector('.bx:nth-child(2)').classList.remove('active');
+    }
+}
+
+    </script>
+</body>
+</html>

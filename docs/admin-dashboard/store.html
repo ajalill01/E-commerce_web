@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Management | CARGLAM</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="static/store.css">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="assets/car-decotaion-logo.png" alt="logo">
+                    <h2>CARGLAM</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <i class='bx bx-x'></i>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="myAdmin.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="product-management.html">
+                    <i class="bx bxs-store"></i>
+                    <h3>My Store</h3>
+                </a>
+                <a href="store.html" class="active">
+                    <i class='bx bxs-car'></i>
+                    <h3>Car Management</h3>
+                </a>
+                <a href="orders.html">
+                    <i class='bx bxs-receipt'></i>
+                    <h3>Orders</h3>
+                </a>
+                <a href="#">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <div class="right">
+                <div class="top">
+                    <button id="menu-btn">
+                        <i class='bx bx-menu'></i>
+                    </button>
+                    <div class="them-toggler">
+                        <i class='bx bx-sun active'></i>
+                        <i class='bx bx-moon'></i>
+                    </div>
+                </div>
+            </div>
+
+            <h1>Car Management</h1>
+
+            <!-- Brand Creation Card -->
+            <div class="card">
+                <h2>Create New Car Brand</h2>
+                <form id="brandForm">
+                    <div class="form-group">
+                        <label for="brandName">Brand Name</label>
+                        <input type="text" id="brandName" class="form-control" placeholder="e.g. Toyota, BMW" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="brandLogo">Brand Logo</label>
+                        <input type="file" id="brandLogo" class="form-control" accept="image/*">
+                        <div class="image-preview" id="brandLogoPreview"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class='bx bx-plus'></i> Create Brand
+                    </button>
+                </form>
+            </div>
+
+            <!-- Model Creation Card -->
+<!-- Model Creation Card -->
+<div class="card">
+  <h2>Add Car Model</h2>
+  <form id="modelForm" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="modelBrand">Select Brand</label>
+      <select id="modelBrand" class="form-control" required>
+        <option value="">-- Select Brand --</option>
+        <!-- Options will be loaded dynamically -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="modelName">Model Name</label>
+      <input type="text" id="modelName" class="form-control" placeholder="e.g. Camry, X5" required>
+    </div>
+    <div class="form-group">
+      <label for="modelYear">Year</label>
+      <input type="number" id="modelYear" class="form-control" 
+             min="1900" max="2099" 
+             placeholder="e.g. 2020" required>
+    </div>
+    <div class="form-group">
+      <label for="modelImages">Model Images</label>
+      <input type="file" id="modelImages" class="form-control" accept="image/*" multiple>
+      <div class="image-preview" id="modelImagesPreview"></div>
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <i class='bx bx-plus'></i> Add Model
+    </button>
+  </form>
+</div>
+
+            <!-- Product Creation Card -->
+<div class="card">
+  <h2>Add Product for Car</h2>
+  <form id="productForm" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="productBrand">Brand</label>
+      <select id="productBrand" class="form-control" required>
+        <option value="">Loading brands...</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="productCar">Car Model</label>
+      <select id="productCar" class="form-control" required disabled>
+        <option value="">Select brand first</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="productName">Product Name</label>
+      <input type="text" id="productName" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="productPrice">Price ($)</label>
+      <input type="number" id="productPrice" class="form-control" 
+             min="0" step="0.01" required>
+    </div>
+    <div class="form-group">
+      <label for="productImages">Product Images</label>
+      <input type="file" id="productImages" class="form-control" 
+             accept="image/*" multiple required>
+      <div id="imagePreview" class="image-preview"></div>
+    </div>
+    <button type="submit" class="btn btn-success">
+      <i class='bx bx-save'></i> Save Product
+    </button>
+  </form>
+</div>
+        </main>
+    </div>
+
+<!-- <script src="static/brandHandler.js"></script> -->
+<!-- <script>
+    document.getElementById('menu-btn').addEventListener('click', function() {
+        document.querySelector('aside').classList.toggle('active');
+    });
+
+    const themeToggler = document.querySelector('.them-toggler');
+    themeToggler.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme-variables');
+        themeToggler.querySelector('i:nth-child(1)').classList.toggle('active');
+        themeToggler.querySelector('i:nth-child(2)').classList.toggle('active');
+    });
+</script> -->
+    <!-- <script src="static/product.js"></script> -->
+    <script src="static/store.js"></script>
+
+</body>
+</html>

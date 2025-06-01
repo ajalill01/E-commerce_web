@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --text: #2b2d42;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --error: #e63946;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkout-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .product-summary {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .product-item {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .product-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .total-price {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: right;
+            margin: 20px 0;
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #3a56d4;
+        }
+
+        .loading {
+            display: none;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .success-message i {
+            color: #4CAF50;
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="javascript:history.back()" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Product
+        </a>
+        
+        <div class="checkout-container">
+            <h1>Checkout</h1>
+            
+            <div id="orderForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" required>
+                    <div class="error-message" id="firstNameError">Please enter your first name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" required>
+                    <div class="error-message" id="lastNameError">Please enter your last name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" required>
+                    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wilaya">Wilaya</label>
+                    <select id="wilaya" required>
+                        <option value="">Select your wilaya</option>
+                        <option value="Adrar">Adrar</option>
+                        <option value="Chlef">Chlef</option>
+                        <option value="Laghouat">Laghouat</option>
+                        <option value="Oum El Bouaghi">Oum El Bouaghi</option>
+                        <option value="Batna">Batna</option>
+                        <option value="Béjaïa">Béjaïa</option>
+                        <option value="Biskra">Biskra</option>
+                        <option value="Béchar">Béchar</option>
+                        <option value="Blida">Blida</option>
+                        <option value="Bouira">Bouira</option>
+                        <option value="Tamanrasset">Tamanrasset</option>
+                        <option value="Tébessa">Tébessa</option>
+                        <option value="Tlemcen">Tlemcen</option>
+                        <option value="Tiaret">Tiaret</option>
+                        <option value="Tizi Ouzou">Tizi Ouzou</option>
+                        <option value="Algiers">Algiers</option>
+                        <option value="Djelfa">Djelfa</option>
+                        <option value="Jijel">Jijel</option>
+                        <option value="Sétif">Sétif</option>
+                        <option value="Saïda">Saïda</option>
+                        <option value="Skikda">Skikda</option>
+                        <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+                        <option value="Annaba">Annaba</option>
+                        <option value="Guelma">Guelma</option>
+                        <option value="Constantine">Constantine</option>
+                        <option value="Médéa">Médéa</option>
+                        <option value="Mostaganem">Mostaganem</option>
+                        <option value="M'Sila">M'Sila</option>
+                        <option value="Mascara">Mascara</option>
+                        <option value="Ouargla">Ouargla</option>
+                        <option value="Oran">Oran</option>
+                        <option value="El Bayadh">El Bayadh</option>
+                        <option value="Illizi">Illizi</option>
+                        <option value="Bordj Bou Arréridj">Bordj Bou Arréridj</option>
+                        <option value="Boumerdès">Boumerdès</option>
+                        <option value="El Tarf">El Tarf</option>
+                        <option value="Tindouf">Tindouf</option>
+                        <option value="Tissemsilt">Tissemsilt</option>
+                        <option value="El Oued">El Oued</option>
+                        <option value="Khenchela">Khenchela</option>
+                        <option value="Souk Ahras">Souk Ahras</option>
+                        <option value="Tipaza">Tipaza</option>
+                        <option value="Mila">Mila</option>
+                        <option value="Aïn Defla">Aïn Defla</option>
+                        <option value="Naâma">Naâma</option>
+                        <option value="Aïn Témouchent">Aïn Témouchent</option>
+                        <option value="Ghardaïa">Ghardaïa</option>
+                        <option value="Relizane">Relizane</option>
+                        <option value="El M'Ghair">El M'Ghair</option>
+                        <option value="El Menia">El Menia</option>
+                        <option value="Ouled Djellal">Ouled Djellal</option>
+                        <option value="Bordj Badji Mokhtar">Bordj Badji Mokhtar</option>
+                        <option value="Béni Abbès">Béni Abbès</option>
+                        <option value="Timimoun">Timimoun</option>
+                        <option value="Touggourt">Touggourt</option>
+                        <option value="Djanet">Djanet</option>
+                        <option value="In Salah">In Salah</option>
+                        <option value="In Guezzam">In Guezzam</option>
+                    </select>
+                    <div class="error-message" id="wilayaError">Please select your wilaya</div>
+                </div>
+                
+                <div class="product-summary" id="productSummary">
+                    <!-- Product will be loaded here -->
+                </div>
+                
+                <div class="total-price" id="totalPrice">
+                    Total: $0.00
+                </div>
+                
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Processing your order...
+                </div>
+                
+                <button type="button" class="submit-btn" id="submitOrder">
+                    Place Order
+                </button>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <h2>Order Placed Successfully!</h2>
+                <p>Your order ID: <strong id="orderId"></strong></p>
+                <a href="index.html" class="back-btn">Return to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('productId');
+            
+            if (!productId) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Load product details
+            loadProductDetails(productId);
+            
+            // Form submission
+            document.getElementById('submitOrder').addEventListener('click', submitOrder);
+            
+            async function loadProductDetails(id) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/products/get/${id}`);
+                    
+                    if (!response.ok) {
+                        throw new Error('Product not found');
+                    }
+                    
+                    const product = await response.json();
+                    renderProductSummary(product);
+                    
+                } catch (error) {
+                    console.error('Error loading product:', error);
+                    document.getElementById('productSummary').innerHTML = `
+                        <div class="error-message">Error loading product details. Please check your connection.</div>
+                    `;
+                }
+            }
+            
+            function renderProductSummary(product) {
+                document.getElementById('productSummary').innerHTML = `
+                    <h3>Your Order</h3>
+                    <div class="product-item">
+                        <img src="${product.images[0]?.url || 'placeholder.jpg'}" alt="${product.name}">
+                        <div>
+                            <h4>${product.name}</h4>
+                            <p>$${product.price?.toFixed(2) || '0.00'} × 1</p>
+                            <p>$${product.price?.toFixed(2) || '0.00'}</p>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('totalPrice').textContent = `Total: $${product.price?.toFixed(2) || '0.00'}`;
+            }
+            
+            async function submitOrder() {
+                // Validate form
+                if (!validateForm()) return;
+                
+                const loading = document.getElementById('loading');
+                const orderForm = document.getElementById('orderForm');
+                const successMessage = document.getElementById('successMessage');
+                
+                loading.style.display = 'flex';
+                
+                try {
+                    const productId = new URLSearchParams(window.location.search).get('productId');
+                    const wilaya = document.getElementById('wilaya').value;
+                    
+                    const orderData = {
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        phoneNumber: document.getElementById('phoneNumber').value,
+                        address: wilaya, // Using just the wilaya as address
+                        cartItems: [{
+                            productId: productId,
+                            quantity: 1
+                        }]
+                    };
+                    
+                    const response = await fetch('http://localhost:3000/api/orders/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(orderData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Failed to place order');
+                    }
+                    
+                    // Show success message
+                    orderForm.style.display = 'none';
+                    document.getElementById('orderId').textContent = result._id || result.orderId || 'N/A';
+                    successMessage.style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('Order submission error:', error);
+                    alert('Error placing order: ' + error.message);
+                } finally {
+                    loading.style.display = 'none';
+                }
+            }
+            
+            function validateForm() {
+                let isValid = true;
+                
+                // First Name
+                if (!document.getElementById('firstName').value.trim()) {
+                    document.getElementById('firstNameError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('firstNameError').style.display = 'none';
+                }
+                
+                // Last Name
+                if (!document.getElementById('lastName').value.trim()) {
+                    document.getElementById('lastNameError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('lastNameError').style.display = 'none';
+                }
+                
+                // Phone Number
+                const phone = document.getElementById('phoneNumber').value.trim();
+                if (!phone || !/^[0-9]{10,15}$/.test(phone)) {
+                    document.getElementById('phoneError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('phoneError').style.display = 'none';
+                }
+                
+                // Wilaya
+                if (!document.getElementById('wilaya').value) {
+                    document.getElementById('wilayaError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('wilayaError').style.display = 'none';
+                }
+                
+                return isValid;
+            }
+        });
+    </script>
+</body>
+</html>

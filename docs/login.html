@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    .login-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      padding: 2rem;
+    }
+    
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .login-header h1 {
+      color: #2c3e50;
+      font-size: 1.8rem;
+    }
+    
+    .login-header p {
+      color: #7f8c8d;
+      margin-top: 0.5rem;
+    }
+    
+    .input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px 12px 40px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border 0.3s;
+    }
+    
+    .input-group input:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+    
+    .input-group i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7f8c8d;
+    }
+    
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #2980b9;
+    }
+    
+    .error-message {
+      color: #e74c3c;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    
+    @media (max-width: 480px) {
+      .login-container {
+        margin: 0 1rem;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1>Admin Portal</h1>
+      <p>Sign in to your account</p>
+    </div>
+    <form id="loginForm">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="username" placeholder="Username" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="Password" required>
+      </div>
+      <div id="error-message" class="error-message"></div>
+      <button type="submit" id="loginBtn">
+        <span id="btnText">Login</span>
+        <i id="spinner" class="fas fa-spinner fa-spin" style="display: none;"></i>
+      </button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const btnText = document.getElementById("btnText");
+    const spinner = document.getElementById("spinner");
+    const errorMessage = document.getElementById("error-message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      btnText.style.display = "none";
+      spinner.style.display = "inline-block";
+      errorMessage.style.display = "none";
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      try {
+        const res = await fetch("http://localhost:3000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          window.location.href = "/docs/admin-dashboard/myAdmin.html";
+        } else {
+          errorMessage.textContent = data.message || "Invalid credentials";
+          errorMessage.style.display = "block";
+        }
+      } catch (err) {
+        errorMessage.textContent = "Connection error. Please try again.";
+        errorMessage.style.display = "block";
+        console.error("Login error:", err);
+      } finally {
+        btnText.style.display = "inline-block";
+        spinner.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
